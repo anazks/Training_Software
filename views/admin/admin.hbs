@@ -1,0 +1,30 @@
+<div class="staff-details">
+  <div class="title">
+    <h2>Staffs</h2>
+    <a href="#" class="btn">View All</a>
+  </div>
+  <table>
+    <tr>
+      <th>username</th>
+      <th>emailId</th>
+      {{!-- <th>password</th> --}}
+      <th>status</th>
+      <th>action</th>
+      <th>option</th>
+
+    </tr>
+    {{#each staffList}}
+      <tr>
+        <td>{{staff_name}}</td>
+        <td>{{email}}</td>
+        {{!-- <td>{{password}} </td> --}}
+        <td>{{status}}</td>
+        <td class="text-success">online</td>
+        <td><a href="" class="btn btn-success">allow</a></td>
+        <td><input type="checkbox">&nbsp;Make admin</td>
+      </tr>
+    {{/each}}
+  </table>
+</div>
+
+</div>

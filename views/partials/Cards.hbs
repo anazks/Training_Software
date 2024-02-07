@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+<style>
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+        }
+
+        .slider {
+            height: 250px;
+            margin: auto;
+            position: relative;
+            width: 100%;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+        }
+
+        .slide-track {
+            display: flex;
+            animation: scroll 40s linear infinite;
+        }
+        .slide-track .slide{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            background-color: rgb(46, 44, 44);
+        }
+
+        .slide-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-250px * 9));
+            }
+        }
+
+        .slide {
+            height: 200px;
+            width: 250px;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            perspective: 100px;
+        }
+
+        img {
+            width: 100%;
+            transition: transform 0.5s;
+        }
+
+        img:hover {
+            transform: translateZ(20px);
+        }
+
+        .slider::before,
+        .slider::after {
+            content: "";
+            height: 100%;
+            position: absolute;
+            width: 15%;
+            z-index: 2;
+        }
+
+        .slider::before {
+            left: 0;
+            top: 0;
+        }
+
+        .slider::after {
+            right: 0;
+            top: 0;
+            transform: rotateZ(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="slider">
+
+        <div class="slide-track">
+            
+        </div>
+
+    </div>
+<script>
+        const url = "http://localhost:3009/errors";
+
+        axios.get(url).then((response) => {
+            var errors = response.data;
+            let errorLength = errors.length;
+
+            // Function to create a new div with random error content
+            function createNewDiv() {
+                const parentElement = document.querySelector('.slide-track');
+                const newDiv = document.createElement('div');
+                newDiv.className = 'slide';
+                parentElement.appendChild(newDiv);
+                newDiv.style.color = 'white';
+
+                // Get a random index to select a random error message
+                const randomIndex = getRandomInt(0,10);
+                if (randomIndex > errors.length) {
+                    newDiv.textContent = `Processing`;
+                } else {
+                    const error = errors[randomIndex];
+                    newDiv.textContent = `Error: ${error.error}`;
+
+                    // Check if the error object has an "id" property
+                    if (error._id) {
+                        // Set the error ID as a data attribute on the div
+                        newDiv.dataset.errorId = error.id;
+
+                        // Add a click event listener to log the error ID when clicked
+                        newDiv.addEventListener('click', function () {
+                            console.log(error,"error")
+                            console.log('Clicked on error ID:', error._id,error.error);
+                            document.getElementById('Error').innerHTML = error.error
+                            document.getElementById('errorId').value = error._id;
+                            document.getElementById('trublecode').value = error.trublecode
+                            document.getElementById('Error').style.fontSize = "30px"
+                            document.getElementById('Error').style.fontStyle = "bold"
+                            document.getElementById("leftBox").style.backgroundColor ="red"
+                            document.getElementById('codes').style.display = "block"
+                            document.getElementById("callResolveApi").style.display='block'
+                        });
+                    } else {
+                        console.error('Error object does not have an "id" property:', error);
+                    }
+                }
+
+                newDiv.style.backgroundColor = 'rgb(46, 44, 44)';
+                newDiv.style.marginLeft = '10px';
+            }
+
+            // Set up the interval to create new divs at random intervals
+            function createDivsAtRandomIntervals() {
+                setInterval(createNewDiv, getRandomInterval());
+            }
+
+            // Start the process
+            createDivsAtRandomIntervals();
+        });
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomInterval() {
+            return Math.floor(Math.random() * 4000) + 1000; // Random interval between 1 and 5 seconds
+        }
+    </script>
+</body>
+</html>

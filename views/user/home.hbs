@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Document</title>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <style>
+        .center,.right,.left{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            gap: 5px;
+        }
+        .left span{
+            font-style: bold;
+            font-size: 17px;
+        }
+      .Resolve{
+        border: none;
+        background-color: white;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        display: none;
+       
+      }
+    #codes{
+        display: none;
+    }
+    
+    </style>
+</head>
+<body>
+    {{>usernav}}
+    <div class="mainBox">
+                <span id="Status"></span>
+            <div class="left" id="leftBox">
+                    <b><i><span id="Error">Loading..</span></i></b> <br>
+                   
+                        <input type="hidden" name="id" id="errorId"> <br>
+                        <input type="hidden" name="trublecode" id="trublecode">
+                        <input type="text" placeholder="Enter Code" name="code" id="codes">
+                        <button  class="Resolve" id="callResolveApi">Resolve</button>
+                 
+            </div>
+            <div class="center">
+                <div class="content">
+                       <span id=""> Prosessing..</span>
+                </div>
+            </div>
+            <div class="right">
+                <div class="content">
+                        Compleated..
+                </div>
+            </div>
+    </div>
+
+    {{> Cards}}
+    <script>
+    function makeAjaxCall() {
+        let _id = document.getElementById("errorId").value;
+        let code = document.getElementById('codes').value;
+        let trublecode =  document.getElementById('trublecode').value;
+        let data = {
+            _id,
+            code,
+            trublecode
+        }
+        $.ajax({
+            url: 'http://localhost:3009/ResolveError',
+            method: 'POST',
+            data: data, // Include the data in the request
+            dataType: 'json',
+            success: function(responseData) {
+                // Update the HTML element with the result
+                console.log(responseData,"response ---")
+                let {ErrorStatus} = responseData;
+                    if(ErrorStatus == true){
+                        console.log("error true")
+                       alert("Error successfully Solved")
+                    }else{
+                        alert("Error Not Solved")
+                    }
+                    
+                     
+            },
+            error: function() {
+                // Handle error cases
+                               console.log(responseData)
+
+            }
+        });
+    }
+
+
+    $(document).ready(function() {
+        // For example, you can call it when the button is clicked
+        $('#callResolveApi').click(makeAjaxCall);
+    });
+
+
+    </script>
+
+</body>
+</html>

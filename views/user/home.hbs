@@ -47,7 +47,7 @@
             </div>
             <div class="center">
                 <div class="content">
-                       <span id=""> Prosessing..</span>
+                       <span id="processing" style="color: green;"> Prosessing..</span>
                 </div>
             </div>
             <div class="right">
@@ -59,6 +59,17 @@
 
     {{> Cards}}
     <script>
+            let DinamicData = ["Processing..","Obtainig IP.....","Data Fetched","192.168.2.57","192.168.2.50","192.168.2.59"]
+        setInterval(displayContets, 3000);
+
+            function displayContets() {
+                var randomIndex = getRandomInt(0,DinamicData.length)
+                    document.getElementById("processing").innerHTML = DinamicData[randomIndex];
+                }
+
+         function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
     function makeAjaxCall() {
         let _id = document.getElementById("errorId").value;
         let code = document.getElementById('codes').value;
